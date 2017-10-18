@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    const auth = () => new Promise((resolve, reject) => {
+      const url = `https://oauth.vk.com/authorize?
+        display=popup&
+        response_type=code&
+        client_id=6225089&
+        redirect_uri=https://shelimov.me/vkauth/close.html
+        &scope=11`.replace(/\s+/gi, '');
+      const win = window.open(url, '_blank', 'height=370;width=660');
+      const messageHandler = event => {
+        if (event.origin !== window.location.origin) {
+          return
+        }
+        resolve(event.data);
+      }
+      window.addEventListener('message', messageHandler);
+      const check = () => {
+        if (!win.closed) {
+          setTimeout(check, 100);
+          return;
+        }
+        window.removeEventListener('message', messageHandler);
+        reject('Error occured');
+      }
+      check();
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementsByTagName('input')[0].onclick = () => {
+        auth().then(e => alert(e), e => alert(e));
+      }
+    });
+  </script>
+</head>
+<body>
+  <input type="button" value="Login" />
+</body>
+</html>

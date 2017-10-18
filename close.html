@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      if (window.opener && window.opener.location.origin === "https://shelimov.me") {
+        const code = window.location.href.match(/code=(.+)/);
+        if (code !== null) { 
+          window.opener.postMessage(code[1], window.opener.location.origin);
+        }
+      }
+      window.close();
+    </script>
+  </head>
+</html>
